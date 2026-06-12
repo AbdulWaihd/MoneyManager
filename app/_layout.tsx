@@ -1,14 +1,29 @@
+import "../global.css";
 import React from 'react';
-import { View } from 'react-native';
 import { Stack } from 'expo-router';
-const Layout = () => {
-    return (
-        <Stack>
-                <Stack.Screen name="Home" options={{ headerShown: false }} />
-        </Stack>
-    );
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AuthProvider } from '../src/context/AuthContext';
+import { ThemeProvider } from '../src/context/ThemeContext';
+import { CurrencyProvider } from '../src/context/CurrencyContext';
+import { LoadingProvider } from '../src/context/LoadingContext';
+
+export default function RootLayout() {
+  return (
+    <SafeAreaProvider>
+      <AuthProvider>
+        <ThemeProvider>
+          <CurrencyProvider>
+            <LoadingProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+              </Stack>
+            </LoadingProvider>
+          </CurrencyProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </SafeAreaProvider>
+  );
 }
-
-
-
-export default Layout;
