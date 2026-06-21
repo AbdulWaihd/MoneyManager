@@ -2,10 +2,10 @@ import "../global.css";
 import React from 'react';
 import { Stack } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AuthProvider } from '../src/context/AuthContext';
-import { ThemeProvider } from '../src/context/ThemeContext';
-import { CurrencyProvider } from '../src/context/CurrencyContext';
-import { LoadingProvider } from '../src/context/LoadingContext';
+import { AuthProvider } from '../contexts/AuthContext';
+import { ThemeProvider } from '../contexts/ThemeContext';
+import { CurrencyProvider } from '../contexts/CurrencyContext';
+import { LoadingProvider } from '../contexts/LoadingContext';
 
 export default function RootLayout() {
   return (

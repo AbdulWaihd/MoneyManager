@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { COLORS } from '../../src/constants/colors';
-import { SPACING } from '../../src/constants/spacing';
-import { TYPOGRAPHY } from '../../src/constants/typography';
-import TextInput from '../../src/components/ui/TextInput';
-import Button from '../../src/components/ui/Button';
-import Checkbox from '../../src/components/ui/Checkbox';
-import { useAuth } from '../../src/context/AuthContext';
-import { useLoading } from '../../src/context/LoadingContext';
-import { loginUser } from '../../src/services/firebase/auth';
+import { COLORS } from '../../constants/colors';
+import { SPACING } from '../../constants/spacing';
+import { TYPOGRAPHY } from '../../constants/typography';
+import TextInput from '../../components/ui/TextInput';
+import Button from '../../components/ui/Button';
+import Checkbox from '../../components/ui/Checkbox';
+import { useAuth } from '../../contexts/AuthContext';
+import { useLoading } from '../../contexts/LoadingContext';
+import { loginUser } from '../../modules/auth/authService';
 import { setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
-import { auth } from '../../src/services/firebase/config';
-import { loginSchema } from '@/services/validation/authSchemas';
+import { auth } from '../../lib/firebase';
+import { loginSchema } from '../../modules/auth/authSchemas';
 import { z } from 'zod';
 
 

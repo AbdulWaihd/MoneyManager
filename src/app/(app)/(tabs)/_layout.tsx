@@ -8,8 +8,8 @@
 
 import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS } from '../../../src/constants/colors';
-import { SPACING } from '../../../src/constants/spacing';
+import { COLORS } from '../../../constants/colors';
+import { SPACING } from '../../../constants/spacing';
 
 export default function TabsLayout() {
   return (

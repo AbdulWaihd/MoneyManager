@@ -11,8 +11,8 @@ import {
     EmailAuthProvider,
     deleteUser,
 } from 'firebase/auth';
-import { auth } from './config';
-import { createUserProfile } from './database';
+import { auth } from '../../lib/firebase';
+import { createUserProfile } from '../../lib/database';
 
 
 

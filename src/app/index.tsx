@@ -14,9 +14,9 @@
 
 import { Redirect, useRouter } from "expo-router";
 import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
-import { useAuth } from "../src/context/AuthContext";
-import { COLORS } from "../src/constants/colors";
-import {TYPOGRAPHY} from "../src/constants/typography";
+import { useAuth } from "../contexts/AuthContext";
+import { COLORS } from "../constants/colors";
+import {TYPOGRAPHY} from "../constants/typography";
 
 export default function Index() {
     const router = useRouter();

@@ -9,7 +9,7 @@
 // ============================================
 
 import { Redirect, Stack } from 'expo-router';
-import { useAuth } from '../../src/context/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function AppLayout() {
   const { currentUser, isLoading } = useAuth();

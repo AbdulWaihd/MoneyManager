@@ -10,9 +10,9 @@ import {
     orderByChild,
     limitToLast,
 } from 'firebase/database';
-import { database } from './config';
-import { Transaction, TransactionInput } from '../../types/transaction.types';
-import { Category, CategoryInput } from '../../types/category.types';
+import { database } from './firebase';
+import { Transaction, TransactionInput } from '../modules/transaction/transaction.types';
+import { Category, CategoryInput } from '../modules/category/category.types';
 
 // TRANSACTIONS
 

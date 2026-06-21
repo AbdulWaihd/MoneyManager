@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../services/firebase/config';
-import { User } from '../types/user.types';
+import { auth } from '../lib/firebase';
+import { User } from '../modules/user/user.types';
 
 // Define context shape
 
