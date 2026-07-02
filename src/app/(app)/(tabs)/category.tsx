@@ -1,9 +1,13 @@
-import { View, Text } from 'react-native';
+import React from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { CategoryListScreen, AddCategoryScreen } from '@/modules/category';
 
-export default function CategoryScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Categories Screen (Phase 7)</Text>
-    </View>
-  );
+export default function CategoryRoute() {
+    const params = useLocalSearchParams();
+    
+    if (params.action === 'add') {
+        return <AddCategoryScreen />;
+    }
+    
+    return <CategoryListScreen />;
 }

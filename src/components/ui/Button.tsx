@@ -10,8 +10,9 @@ interface ButtonProps{
     onPress:()=>void;
     disabled?:boolean;
     variant?:'primary'|'secondary'|'tertiary';
-    loading:boolean;
+    loading?:boolean;
     full?:boolean;
+    style?:any;
 }
 
 export default function Button({
@@ -21,6 +22,7 @@ export default function Button({
     disabled=false,
     loading=false,
     full=false,
+    style,
 }:ButtonProps) {
 
     const isPrimary=variant==='primary';
@@ -31,19 +33,22 @@ export default function Button({
         <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      style={{
-        backgroundColor: isPrimary ? COLORS.primary : 'transparent',
-        borderWidth: isPrimary ? 0 : 1,
-        borderColor: isPrimary ? 'transparent' : COLORS.primary,
-        paddingVertical: SPACING.md,
-        paddingHorizontal: SPACING.lg,
-        borderRadius: SPACING.lg,
-        opacity: disabled ? 0.5 : 1,
-        width: full ? '100%' : 'auto',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+      style={[
+        {
+          backgroundColor: isPrimary ? COLORS.primary : 'transparent',
+          borderWidth: isPrimary ? 0 : 1,
+          borderColor: isPrimary ? 'transparent' : COLORS.primary,
+          paddingVertical: SPACING.md,
+          paddingHorizontal: SPACING.lg,
+          borderRadius: SPACING.lg,
+          opacity: disabled ? 0.5 : 1,
+          width: full ? '100%' : 'auto',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        },
+        style
+      ]}
     >
            {loading ? (
         <ActivityIndicator color={isPrimary ? COLORS.surface : COLORS.primary} />

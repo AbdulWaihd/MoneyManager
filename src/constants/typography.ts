@@ -6,6 +6,7 @@ export const TYPOGRAPHY = {
     body: 'System',
   },
   sizes: {
+    xs: 10,
     sm: 12,
     base: 14,
     md: 16,

@@ -1,5 +1,13 @@
+// src/lib/firebase.ts
+// ============================================
+// RESPONSIBILITY: Core Firebase initialization
+// - Initialize Firebase app
+// - Export auth and database instances
+// ============================================
+
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+// @ts-ignore - TS doesn't resolve react-native exports correctly by default
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -16,8 +24,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// auth is  Firebase service object.
-export const auth = getAuth(app);
+// Initialize auth with AsyncStorage persistence
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+});
+
 export const database = getDatabase(app);
 
 export default app;

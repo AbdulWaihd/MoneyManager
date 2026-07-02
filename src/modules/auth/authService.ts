@@ -1,105 +1,79 @@
-// src/services/firebase/auth.ts
+// src/modules/auth/authService.ts
+// ============================================
+// RESPONSIBILITY: Auth service functions
+// - Wraps Firebase auth functions
+// - Business logic for auth
+// ============================================
+
 import {
-    createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signOut,
-    sendEmailVerification,
-    updateProfile,
     sendPasswordResetEmail,
-    updatePassword,
-    reauthenticateWithCredential,
-    EmailAuthProvider,
-    deleteUser,
+    setPersistence,
+    inMemoryPersistence,
+    signOut,
+    createUserWithEmailAndPassword,
+    updateProfile,
+    sendEmailVerification,
 } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
-import { createUserProfile } from '../../lib/database';
+import { ref, set } from 'firebase/database';
+import { auth, database } from '../../lib/firebase';
 
-
-
-// Sign Up
-export const signupUser = async (
-    email: string,
-    password: string,
-    displayName: string,
-    preferredCurrency: string = 'INR'
-) => {
-
-    // Sends email + password to Firebase. If successful, returns the user credential object. If there's an error (like email already in use), it will throw an error.
-    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-
-    // This takes userCredential.user (the user we just created) and attaches the display name to it.
-    await updateProfile(userCredential.user, { displayName });
-
-    // Create user profile in Realtime Database
-    // This stores app-specific data (currency, etc.)
-    await createUserProfile(userCredential.user.uid, {
-        displayName,
-        email,
-        preferredCurrency,
-    });
-
-    // Send verification email
-    await sendEmailVerification(userCredential.user);
-
+// Login user
+export const login = async (email: string, password: string) => {
+    console.log('Login attempt Email:', email);
+    console.log('Login attempt Password length:', password?.length);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
     return userCredential.user;
 };
 
-// Login
-export const loginUser = async (email: string, password: string) => {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-    // Check if email is verified
-    if (!userCredential.user.emailVerified) {
-        await signOut(auth);
-        throw new Error('Please verify your email before logging in');
+// Set persistence
+// On React Native, auth is already initialized with AsyncStorage persistence (always remembered).
+// If the user un-checks "Remember me", we switch to in-memory persistence (session only).
+export const setPersistenceMode = async (rememberMe: boolean) => {
+    if (!rememberMe) {
+        return setPersistence(auth, inMemoryPersistence);
     }
-    return userCredential.user;
+    // When rememberMe is true, the AsyncStorage persistence set at init time is already in effect.
+    // Nothing to do — just return.
+};
+
+// Send password reset email
+export const sendResetPasswordEmail = async (email: string) => {
+    return sendPasswordResetEmail(auth, email);
 };
 
 // Logout
-export const logoutUser = async () => {
-    await signOut(auth);
-};
-
-// Reset Password
-export const resetPassword = async (email: string) => {
-    await sendPasswordResetEmail(auth, email);
-};
-
-
-
-export const changePassword = async (currentPassword: string, newPassword: string) => {
-    const user = auth.currentUser;
-    if (!user || !user.email) throw new Error('No user logged in');
-
-    try {
-        // EmailAuthProvider is a Firebase class that creates a credential object — basically a package that bundles email and password together in a format Firebase understands for re-authentication.
-        const credential = EmailAuthProvider.credential(user.email, currentPassword);
-        await reauthenticateWithCredential(user, credential);
-        await updatePassword(user, newPassword);
-    } catch (error: any) {
-        // Firebase error codes
-        if (error.code === 'auth/wrong-password') {
-            throw new Error('Current password is incorrect');
-        }
-        if (error.code === 'auth/too-many-requests') {
-            throw new Error('Too many attempts. Try again later');
-        }
-        // Unknown error — rethrow as is
-        throw error;
-    }
-
-};
-// Delete Account
-export const deleteAccount = async () => {
-    const user = auth.currentUser;
-    if (!user) throw new Error('No user logged in');
-
-    // Delete Firebase Auth user
-    await deleteUser(user);
+export const logout = async () => {
+    return signOut(auth);
 };
 
 // Get current user
 export const getCurrentUser = () => {
     return auth.currentUser;
+};
+
+// Signup user
+export const signup = async (email: string, password: string, displayName: string) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    await updateProfile(user, { displayName });
+    
+    // Send verification email
+    await sendEmailVerification(user);
+
+    // Save profile data to Realtime Database (non-fatal — requires DB rules to be set)
+    try {
+        const profileRef = ref(database, `users/${user.uid}/profile`);
+        await set(profileRef, {
+            displayName,
+            email,
+            preferredCurrency: 'INR'
+        });
+    } catch (dbError) {
+        // DB write failed (likely rules not set yet) — account is still created
+        console.warn('Profile DB write failed (check database rules):', dbError);
+    }
+
+    return user;
 };

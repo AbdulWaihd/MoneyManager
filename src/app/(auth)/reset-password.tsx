@@ -1,9 +1,3 @@
-import { View, Text } from 'react-native';
+import { ResetPasswordScreen } from '@/modules/auth';
 
-export default function ResetPasswordScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Reset Password Screen (Phase 4)</Text>
-    </View>
-  );
-}
+export default ResetPasswordScreen;
