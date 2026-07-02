@@ -31,8 +31,12 @@ export default function Index() {
         );
     }
 
-    // Return 2: User is logged in. Skip landing. Go straight to home.
+    // Return 2: User is logged in. 
     if (currentUser?.uid) {
+        if (!currentUser.emailVerified) {
+            return <Redirect href="/(auth)/verify-email" />;
+        }
+        // Skip landing. Go straight to home.
         return <Redirect href="/(app)/home" />;
     }
 

@@ -1,9 +1,3 @@
-import { View, Text } from 'react-native';
+import { SignupScreen } from '@/modules/auth';
 
-export default function SignupScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Signup Screen (Phase 4)</Text>
-    </View>
-  );
-}
+export default SignupScreen;

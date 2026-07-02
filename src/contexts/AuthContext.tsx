@@ -10,6 +10,7 @@ interface AuthContextType {
     uid: string | null;                 // User ID (shortcut for currentUser?.uid)
     isLoading: boolean;                 // True while checking auth state on app start
     error: string | null;               // Error message if auth failed
+    reloadUser: () => Promise<void>;    // Manually refresh user state (e.g. after email verification)
 }
 // Every AuthContext MUST contain these 4 values.
 // these are later created in others 
@@ -46,6 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         uid: firebaseUser.uid,
                         email: firebaseUser.email || '',
                         displayName: firebaseUser.displayName || '',
+                        emailVerified: firebaseUser.emailVerified,
                     });
                     setError(null);
                 } else {
@@ -67,12 +69,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return unsubscribe;
     }, []);
 
+    const reloadUser = async () => {
+        if (auth.currentUser) {
+            await auth.currentUser.reload();
+            setCurrentUser({
+                uid: auth.currentUser.uid,
+                email: auth.currentUser.email || '',
+                displayName: auth.currentUser.displayName || '',
+                emailVerified: auth.currentUser.emailVerified,
+            });
+        }
+    };
+
     //   context value-passed to all children of this provider else AuthContext.Provider needs a single value prop to pass data down. You can't pass multiple separate things — only one value. So you package everything into one object first.
     const value: AuthContextType = {
         currentUser,
         uid: currentUser?.uid || null,
         isLoading,
         error,
+        reloadUser,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

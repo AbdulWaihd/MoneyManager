@@ -1,4 +1,4 @@
-// src/services/validation/authSchemas.ts
+// src/modules/auth/authSchemas.ts
 // ============================================
 // RESPONSIBILITY: Zod schemas for auth forms
 // - Login form validation
@@ -21,9 +21,7 @@ export const loginSchema = z.object({
   rememberMe: z.boolean().optional().default(false),
 });
 
-// Type inference from schema
 export type LoginFormData = z.infer<typeof loginSchema>;
-// "Look at loginSchema and automatically create a TypeScript type from it. Call that type LoginForm."
 
 // SIGNUP SCHEMA
 export const signupSchema = z.object({

@@ -1,9 +1,13 @@
-import { View, Text } from 'react-native';
+import React from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { TransactionListScreen, AddTransactionScreen } from '@/modules/transaction';
 
-export default function TransactionsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Transactions Screen (Phase 5)</Text>
-    </View>
-  );
+export default function TransactionsRoute() {
+    const params = useLocalSearchParams();
+    
+    if (params.action === 'add') {
+        return <AddTransactionScreen />;
+    }
+    
+    return <TransactionListScreen />;
 }

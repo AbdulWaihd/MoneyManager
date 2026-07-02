@@ -25,13 +25,19 @@ export default function AppLayout() {
     return <Redirect href="/" />;
   }
 
+  // AUTH GUARD: User is logged in but email is not verified
+  // Redirect to verification screen
+  if (!currentUser.emailVerified) {
+    return <Redirect href="/(auth)/verify-email" />;
+  }
+
   // User IS authenticated
   // Show protected routes
   return (
     <Stack
       screenOptions={{
         headerShown: false,
-        animationEnabled: true,
+        animation: 'default',
       }}
     >
       {/* Main tabs: home, transactions, categories, settings */}
