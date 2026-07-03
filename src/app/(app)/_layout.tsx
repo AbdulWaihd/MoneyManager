@@ -40,7 +40,7 @@ export default function AppLayout() {
         animation: 'default',
       }}
     >
-      {/* Main tabs: home, transactions, categories, settings */}
+      {/* Main tabs: home, transactions, settings */}
       <Stack.Screen 
         name="(tabs)"
         options={{

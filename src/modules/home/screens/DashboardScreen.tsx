@@ -8,11 +8,15 @@ import { useDashboardData } from '../hooks/useDashboardData';
 import BalanceCard from '../components/BalanceCard';
 import SpendingChart from '../components/SpendingChart';
 import RecentTransactionsList from '../components/RecentTransactionsList';
+import TransactionModal from '../../transaction/components/TransactionModal';
+import AppHeader from '../../../components/common/AppHeader';
+import SmartInsightCard from '../components/SmartInsightCard';
 
 export default function DashboardScreen() {
     const insets = useSafeAreaInsets();
     const [refreshing, setRefreshing] = useState(false);
-    const { summary, recentTransactions, refetch, isLoadingData } = useDashboardData('this_month');
+    const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+    const { summary, recentTransactions, expenseBreakdown, categories, refetch, isLoadingData } = useDashboardData('this_month');
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
@@ -22,7 +26,7 @@ export default function DashboardScreen() {
 
     const formatAmount = (amount: number) => {
         // Amount is stored in paise/cents, so divide by 100 for display
-        return `₹${(amount / 100).toFixed(2)}`;
+        return `$${(amount / 100).toFixed(2)}`;
     };
 
     return (
@@ -37,6 +41,8 @@ export default function DashboardScreen() {
                     translucent={false}
                 />
                 
+                <AppHeader />
+                
                 <ScrollView
                     contentContainerStyle={[
                         styles.container,
@@ -50,10 +56,22 @@ export default function DashboardScreen() {
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
                 >
-                    <BalanceCard summary={summary} formatAmount={formatAmount} />
-                    <SpendingChart summary={summary} />
+                    <BalanceCard 
+                        summary={summary} 
+                        formatAmount={formatAmount} 
+                        onAddTransaction={() => setIsAddModalVisible(true)}
+                    />
+                    <SmartInsightCard summary={summary} breakdown={expenseBreakdown} />
+                    <SpendingChart summary={summary} breakdown={expenseBreakdown} />
                     <RecentTransactionsList transactions={recentTransactions} formatAmount={formatAmount} />
                 </ScrollView>
+
+                <TransactionModal
+                    visible={isAddModalVisible}
+                    categories={categories}
+                    onClose={() => setIsAddModalVisible(false)}
+                    onCreated={refetch}
+                />
             </LinearGradient>
         </SafeAreaView>
     );

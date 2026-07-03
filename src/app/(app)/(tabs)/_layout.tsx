@@ -8,23 +8,62 @@
 
 import { Tabs } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS } from '../../../constants/colors';
 import { SPACING } from '../../../constants/spacing';
+import { TYPOGRAPHY } from '../../../constants/typography';
+
+type TabIconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+
+type TabItemProps = {
+  focused: boolean;
+  label: string;
+  activeIcon: TabIconName;
+  inactiveIcon: TabIconName;
+};
+
+function TabItem({ focused, label, activeIcon, inactiveIcon }: TabItemProps) {
+  const color = focused ? COLORS.surface : '#9aa0aa';
+
+  return (
+    <View style={[styles.tabItem, focused && styles.activeTabItem]}>
+      <MaterialCommunityIcons
+        name={focused ? activeIcon : inactiveIcon}
+        size={28}
+        color={color}
+      />
+      <Text style={[styles.tabLabel, focused && styles.activeTabLabel]}>
+        {label}
+      </Text>
+    </View>
+  );
+}
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
+  
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.primary,        // #0057bf (blue)
-        tabBarInactiveTintColor: COLORS['text-light'], // #424754 (gray)
+        tabBarShowLabel: false,
         tabBarStyle: {
-          paddingBottom: SPACING.sm,
-          paddingTop: SPACING.sm,
-          height: 60,
-          borderTopWidth: 1,
-          borderTopColor: COLORS.border,
+          height: 85,
+          paddingTop: 10,
+          paddingBottom: insets.bottom > 0 ? insets.bottom : 10,
+          paddingHorizontal: SPACING.md,
+          borderTopWidth: 0,
           backgroundColor: COLORS.surface,
+          shadowColor: '#111c2d',
+          shadowOffset: { width: 0, height: -8 },
+          shadowOpacity: 0.06,
+          shadowRadius: 18,
+          elevation: 12,
+        },
+        tabBarItemStyle: {
+          height: 70,
+          justifyContent: 'center',
         },
       }}
     >
@@ -33,11 +72,12 @@ export default function TabsLayout() {
         name="home"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons 
-              name={focused ? 'home' : 'home-outline'} 
-              size={24} 
-              color={color} 
+          tabBarIcon: ({ focused }) => (
+            <TabItem
+              focused={focused}
+              label="Home"
+              activeIcon="home"
+              inactiveIcon="home-outline"
             />
           ),
         }}
@@ -47,12 +87,13 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="transactions"
         options={{
-          title: 'Transactions',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons 
-              name={focused ? 'history' : 'history'} 
-              size={24} 
-              color={color} 
+          title: 'History',
+          tabBarIcon: ({ focused }) => (
+            <TabItem
+              focused={focused}
+              label="History"
+              activeIcon="history"
+              inactiveIcon="history"
             />
           ),
         }}
@@ -63,11 +104,12 @@ export default function TabsLayout() {
         name="category"
         options={{
           title: 'Categories',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons 
-              name={focused ? 'tag-multiple' : 'tag-multiple-outline'} 
-              size={24} 
-              color={color} 
+          tabBarIcon: ({ focused }) => (
+            <TabItem
+              focused={focused}
+              label="Categories"
+              activeIcon="shape"
+              inactiveIcon="shape-outline"
             />
           ),
         }}
@@ -78,11 +120,12 @@ export default function TabsLayout() {
         name="settings"
         options={{
           title: 'Settings',
-          tabBarIcon: ({ color, focused }) => (
-            <MaterialCommunityIcons 
-              name={focused ? 'cog' : 'cog-outline'} 
-              size={24} 
-              color={color} 
+          tabBarIcon: ({ focused }) => (
+            <TabItem
+              focused={focused}
+              label="Settings"
+              activeIcon="cog"
+              inactiveIcon="cog-outline"
             />
           ),
         }}
@@ -90,3 +133,28 @@ export default function TabsLayout() {
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabItem: {
+    width: 80,
+    height: 55,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
+  activeTabItem: {
+    width: 70,
+    borderRadius: 10,
+    backgroundColor: COLORS.primary,
+  },
+  tabLabel: {
+    color: '#9aa0aa',
+    fontSize: TYPOGRAPHY.sizes.sm,
+    lineHeight: 17,
+    fontWeight: '800',
+    fontFamily: TYPOGRAPHY.fonts.body,
+  },
+  activeTabLabel: {
+    color: COLORS.surface,
+  },
+});
