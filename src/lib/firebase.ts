@@ -24,10 +24,24 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Initialize auth with AsyncStorage persistence
+// Initialize auth with AsyncStorage persistence---->This line initializes Firebase Authentication AND tells it: "Save the user's login session to AsyncStorage so they stay logged in even if the app closes."
+
+// initializeAuth()---->A Firebase function that sets up the Authentication module.
+
+// It takes 2 parameters:
+
+// app — the Firebase app instance (from line 18)
+// { persistence: ... } — configuration object (options)
+
+// Returns An Auth object — the authentication module you use for login, logout, etc.
+// The Configuration Object--->  persistence: getReactNativePersistence(AsyncStorage),
+
 export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
+  // getReactNativePersistence()---->A Firebase function that creates a "persistence adapter" — a bridge between Firebase and React Native.
 });
+
+
 
 export const database = getDatabase(app);
 
