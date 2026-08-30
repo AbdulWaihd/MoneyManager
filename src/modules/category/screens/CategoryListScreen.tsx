@@ -273,13 +273,14 @@ const styles = StyleSheet.create({
     /* Grid rows */
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
+        gap: TILE_GAP,
         marginBottom: TILE_GAP,
     },
 
     /* Tile */
     tile: {
-        width: TILE_WIDTH,
+        flex: 1,
         backgroundColor: '#ffffff',
         borderRadius: 20,
         padding: 16,
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     tileSpacer: {
-        width: TILE_WIDTH,
+        flex: 1,
     },
     tileTop: {
         flexDirection: 'row',
