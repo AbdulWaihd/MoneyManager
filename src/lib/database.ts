@@ -20,6 +20,8 @@ import { Category, CategoryInput } from '../modules/category/category.types';
 
 // Add transaction
 export const addTransaction = async (uid: string, transaction: TransactionInput): Promise<string | null> => {
+    // returns a promise of type string or null. The string is the unique key of the new transaction, which can be used for future updates or deletions. If the operation fails, it returns null.
+
     // Creates a pointer to the location transactions/userId in your database. 
     const transactionRef = ref(database, `transactions/${uid}`);
     // push() creates a new child node under that location with a unique key, and returns a reference to it.
@@ -43,12 +45,35 @@ export const getTransactions = async (uid: string): Promise<Transaction[]> => {
     if (!snapshot.exists()) return [];
 
     // snapshot.val() returns the raw data object from Firebase. We then use Object.keys() to get an array of transaction IDs, and map over that array to create a new array of transaction objects. Each transaction object includes all the original data (using the spread operator) plus an 'id' field that contains the transaction ID (the key from Firebase).
+
+
     const data = snapshot.val();
+    // Object.entries(----->converts an object into an array.
     return Object.entries(data).map(([key, value]) => ({
         //assert that value is a Transaction type,
         ...(value as Transaction),
         id: key,
     }));
+// INPUT (Firebase format):
+// {
+//   "-N8k3jK9L": { amount: 100, date: "...", ... },
+//   "-L2pQoM4x": { amount: 200, date: "...", ... }
+// }
+
+// // STEP 1: Object.entries()
+// [
+//   ["-N8k3jK9L", { amount: 100, date: "...", ... }],
+//   ["-L2pQoM4x", { amount: 200, date: "...", ... }]
+// ]
+
+// // STEP 2: .map() transformation
+// [
+//   { amount: 100, date: "...", ..., id: "-N8k3jK9L" },
+//   { amount: 200, date: "...", ..., id: "-L2pQoM4x" }
+// ]
+
+// // OUTPUT (Component format):
+// Array of objects with IDs inside
 };
 
 // Update transaction
